@@ -5,7 +5,6 @@ function defaultFn() {
   searchFn(defaultFood);
 }
 
-
 document.getElementById("searchBtn").addEventListener("click", () => {
   const userIn = document.getElementById("searchInput").value.trim();
   if (userIn !== "") {
@@ -49,7 +48,7 @@ function showRecpsFn(r) {
         <h3 class="text-lg font-bold text-gray-800 mb-2">${recipe.strMeal}</h3>
         <p class="text-sm text-gray-500 mb-1"><strong>Area:</strong> ${recipe.strArea}</p>
         <p class="text-sm text-gray-500 mb-3"><strong>Category:</strong> ${recipe.strCategory}</p>
-        <button class="show-recipe-btn px-3 py-1 bg-pink-500 text-white text-sm rounded-lg hover:bg-pink-600 transition" 
+        <button class="show-recipe-btn px-3 py-1 bg-orange-500 text-white text-sm rounded-lg hover:bg-pink-600 transition" 
                 data-id="${recipe.idMeal}">
           Show Recipe
         </button>
@@ -84,8 +83,6 @@ function modalFn(recipeId) {
       console.error("Error fetching recipe details:", error)
     );
 }
-
-
 function formatFn(instructions) {
   return instructions
     .split("\r\n")
@@ -93,10 +90,13 @@ function formatFn(instructions) {
     .join("<br>");
 }
 
-
 function closeModalFn() {
   document.getElementById("recipeModal").classList.add("hidden");
 }
 
-defaultFn();
+defaultFn();	
 
+
+
+
+	
