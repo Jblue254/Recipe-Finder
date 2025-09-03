@@ -75,7 +75,7 @@ function modalFn(recipeId) {
  
 
 mData.innerHTML = `
-<div class = "w-full max-h-[100vh] overflow-y-auto m-2">
+<div class = "w-full max-h-[100vh] overflow-y-auto m-2 p-2">
     <h2 class="text-2xl font-bold mb-1">${rep.strMeal}</h2>
     <h3 class="text-lg font-semibold mb-4">Instructions:</h3>
     <p class="text-gray-700 leading-relaxed">${formatFn(rep.strInstructions)}</p>
@@ -93,9 +93,9 @@ mData.innerHTML = `
 }
 function formatFn(instructions) {
   return instructions
-    // .split("\r\n")
-    // .filter((instruction) => instruction.trim() !== "")
-    // ).join("<br>";
+    .split("\r\n")
+    .filter((instruction) => instruction.trim() !== "")
+    .join("<br>");
 }
 
 function closeModalFn() {
