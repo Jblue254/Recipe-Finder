@@ -43,13 +43,13 @@ function showRecpsFn(r) {
     c.className =
       "bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition transform hover:-translate-y-1";
     c.innerHTML = `
-      <img src="${recipe.strMealThumb}" alt="${recipe.strMeal}" class="w-full h-40 object-cover">
-      <div class="p-4 text-left">
+      <img src="${recipe.strMealThumb}" alt="${recipe.strMeal}" class="w-full h-40 object-cover ">
+      <div class="p-1 text-left">
         <h3 class="text-lg font-bold text-gray-800 mb-2">${recipe.strMeal}</h3>
         <p class="text-sm text-gray-500 mb-1"><strong>Area:</strong> ${recipe.strArea}</p>
         <p class="text-sm text-gray-500 mb-3"><strong>Category:</strong> ${recipe.strCategory}</p>
         <button class="show-recipe-btn px-3 py-1 bg-orange-500 text-white text-sm rounded-lg hover:bg-pink-600 transition" 
-                data-id="${recipe.idMeal}">
+                data-id="${recipe.idMeal} ">
           Show Recipe
         </button>
       </div>
@@ -72,11 +72,19 @@ function modalFn(recipeId) {
     .then((response) => response.json())
     .then((data) => {
       const rep = data.meals[0];
-      mData.innerHTML = `
-        <h2 class="text-2xl font-bold mb-4">${rep.strMeal}</h2>
-        <h3 class="text-lg font-semibold mb-2">Instructions:</h3>
-        <p class="text-gray-700 leading-relaxed">${formatFn(rep.strInstructions)}</p>
-      `;
+ 
+
+mData.innerHTML = `
+<div class = "w-full max-h-[100vh] overflow-y-auto m-2">
+    <h2 class="text-2xl font-bold mb-1">${rep.strMeal}</h2>
+    <h3 class="text-lg font-semibold mb-4">Instructions:</h3>
+    <p class="text-gray-700 leading-relaxed">${formatFn(rep.strInstructions)}</p>
+    <button id="closeBtn" class="px-3 py-1  bg-orange-500 text-white text-sm rounded-2xl hover:bg-pink-600 transition">
+        Close
+    </button>
+<div/>
+`;
+
       document.getElementById("recipeModal").classList.remove("hidden");
     })
     .catch((error) =>
@@ -85,9 +93,9 @@ function modalFn(recipeId) {
 }
 function formatFn(instructions) {
   return instructions
-    .split("\r\n")
-    .filter((instruction) => instruction.trim() !== "")
-    .join("<br>");
+    // .split("\r\n")
+    // .filter((instruction) => instruction.trim() !== "")
+    // ).join("<br>";
 }
 
 function closeModalFn() {
