@@ -24,7 +24,7 @@
             </nav>
 
         </div>
-        <hr class="w-[1000px] mx-auto my-3 border-t-[2px] border-orange-500 pt-4">
+         <hr class="w-full max-w-5xl mx-auto my-3 border-t-2 border-orange-500">
     </header>
     <p class="font-extrabold text-center text-6xl pt-2">Your No. 1 <span
             class="italic text-3xl pb-8 font-medium text-green-600">Food Recipe</span></p>
@@ -34,12 +34,16 @@
     <p class="pt-2">for every craving and occasion.</p>
     <div class="bg-white/90  rounded-2xl shadow-xl w-full max-w-6xl mx-auto text-center pt-2">
         <h1 class="text-3xl font-bold text-black mb-6">Recipe Finder</h1>
-        <div class="flex items-center gap-2 mb-6 w-[900px] pl-[320px]">
-            <input id="searchInput" type="text" class="flex-1 p-3 rounded-lg border border-gray-300">
-            <button id="searchBtn" class="px-5 py-2  bg-orange-500 text-white rounded-lg hover:bg-pink-600 ">
-                Search
-            </button>
-        </div>
+        <div class="flex items-center gap-2 mb-6 max-w-3xl w-full mx-auto px-4">
+  <input id="searchInput" 
+         type="text" 
+         class="flex-1 p-3 rounded-lg border border-gray-300  outline-none">
+  <button id="searchBtn" 
+          class="px-5 py-2 bg-orange-500 text-white rounded-lg hover:bg-pink-600 transition">
+    Search
+  </button>
+</div>
+
         <div id="recipeContainer"
             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-[70vh] overflow-y-auto">
         </div>
