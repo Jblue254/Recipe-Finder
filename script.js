@@ -14,11 +14,23 @@ document.getElementById("searchBtn").addEventListener("click", () => {
   }
 });
 
-document.addEventListener("click", (event) => {
+document.addEventListener("click", async (event) => {
   if (event.target.classList.contains("show-recipe-btn")) {
     const rId = event.target.getAttribute("data-id");
     modalFn(rId);
   }
+
+  if (event.target.closest(".fav-btn")) {
+    const rId = event.target.closest(".fav-btn").getAttribute("data-id");
+
+
+    const res = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${rId}`);
+    const data = await res.json();
+    if (data.meals && data.meals[0]) {
+      addToFavorites(data.meals[0], event.target.closest(".fav-btn"));
+    }
+  }
+
   if (event.target.id === "closeBtn") {
     closeModalFn();
   }
@@ -56,22 +68,36 @@ function showRecpsFn(r) {
   const rCont = document.getElementById("recipeContainer");
   rCont.innerHTML = "";
 
+  const favs = getFavorites();
+
   r.slice(0, 20).forEach((recipe) => {
+    const isFav = favs.some(f => f.idMeal === recipe.idMeal);
+
     const c = document.createElement("article");
     c.className =
       "bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition transform hover:-translate-y-1";
+
     c.innerHTML = `
-      <img src="${recipe.strMealThumb}" alt="${recipe.strMeal}" class="w-full h-40 object-cover ">
+      <img src="${recipe.strMealThumb}" alt="${recipe.strMeal}" class="w-full h-40 object-cover">
       <div class="p-1 text-left">
         <h3 class="text-lg font-bold text-gray-800 mb-2">${recipe.strMeal}</h3>
         <p class="text-sm text-gray-500 mb-1"><strong>Area:</strong> ${recipe.strArea}</p>
         <p class="text-sm text-gray-500 mb-3"><strong>Category:</strong> ${recipe.strCategory}</p>
-        <button class="show-recipe-btn px-3 py-1 bg-orange-500 text-white text-sm rounded-lg hover:bg-pink-600 transition" 
-                data-id="${recipe.idMeal}">
-          Show Recipe
-        </button>
+        <div class="flex gap-2 items-center">
+          <button class="show-recipe-btn px-3 py-1 bg-orange-500 text-white text-sm rounded-lg hover:bg-pink-600 transition" 
+                  data-id="${recipe.idMeal}">
+            Show Recipe
+          </button>
+          <button class="fav-btn transition" data-id="${recipe.idMeal}" title="Add to Favorites">
+            ${isFav
+              ? `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="w-6 h-6 text-red-500 "><path d="M305 151.1L320 171.8L335 151.1C360 116.5 400.2 96 442.9 96C516.4 96 576 155.6 576 229.1L576 231.7C576 343.9 436.1 474.2 363.1 529.9C350.7 539.3 335.5 544 320 544C304.5 544 289.2 539.4 276.9 529.9C203.9 474.2 64 343.9 64 231.7L64 229.1C64 155.6 123.6 96 197.1 96C239.8 96 280 116.5 305 151.1z"/></svg>`
+              : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="w-6 h-6 text-gray-400"><path d="M305 151.1L320 171.8L335 151.1C360 116.5 400.2 96 442.9 96C516.4 96 576 155.6 576 229.1L576 231.7C576 343.9 436.1 474.2 363.1 529.9C350.7 539.3 335.5 544 320 544C304.5 544 289.2 539.4 276.9 529.9C203.9 474.2 64 343.9 64 231.7L64 229.1C64 155.6 123.6 96 197.1 96C239.8 96 280 116.5 305 151.1z"/></svg>`
+            }
+          </button>
+        </div>
       </div>
     `;
+
     rCont.appendChild(c);
   });
 
@@ -79,6 +105,7 @@ function showRecpsFn(r) {
     rCont.firstChild.style.margin = "auto";
   }
 }
+
 
 function noRecFn() {
   const rCont = document.getElementById("recipeContainer");
@@ -109,11 +136,8 @@ async function modalFn(recipeId) {
     console.error("Error fetching recipe details:", error);
   }
 }
+
 function formatFn(instructions) {
-  // return instructions
-  // .split("\r\n") 
-  // .filter((instruction) => instruction.trim() !== "") 
-  // .join("<br>");
   if (typeof instructions !== "string") return "";
 
   const steps = instructions
@@ -129,5 +153,36 @@ function formatFn(instructions) {
 function closeModalFn() {
   document.getElementById("recipeModal").classList.add("hidden");
 }
+
+function getFavorites() {
+  return JSON.parse(localStorage.getItem("favorites")) || [];
+}
+
+function saveFavorites(favs) {
+  localStorage.setItem("favorites", JSON.stringify(favs));
+}
+
+function addToFavorites(recipe, btn) {
+  let favs = getFavorites();
+  const exists = favs.some(f => f.idMeal === recipe.idMeal);
+
+  if (!exists) {
+    favs.push(recipe);
+    saveFavorites(favs);
+    alert(`${recipe.strMeal} added to favorites!`);
+
+    
+    if (btn) {
+      btn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="w-6 h-6 text-red-500">
+          <path d="M305 151.1L320 171.8L335 151.1C360 116.5 400.2 96 442.9 96C516.4 96 576 155.6 576 229.1L576 231.7C576 343.9 436.1 474.2 363.1 529.9C350.7 539.3 335.5 544 320 544C304.5 544 289.2 539.4 276.9 529.9C203.9 474.2 64 343.9 64 231.7L64 229.1C64 155.6 123.6 96 197.1 96C239.8 96 280 116.5 305 151.1z"/>
+        </svg>`;
+      
+    }
+  } else {
+    alert(`${recipe.strMeal} is already in your favorites.`);
+  }
+}
+
 
 defaultFn();

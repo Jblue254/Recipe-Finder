@@ -1,11 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Favourites</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Favourites</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    
+  <header class="text-gray-600 body-font">
+    <div class="container mx-auto flex flex-wrap p-2 flex-col md:flex-row items-center pt-4">
+      <a class="title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+        <span class="text-xl font-bold">
+          <span class="italic text-4xl text-orange-500 font-extrabold">R</span>ecipe
+        </span>
+        <p class="italic text-2xl font-extrabold">finder</p>
+      </a>
+      <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
+        <a class="mr-5 hover:text-gray-900" href="index.html">Home</a>
+        <a class="mr-5 hover:text-gray-900" href="recipes.html">Recipes</a>
+        <a class="mr-5 hover:text-gray-900" href="about us.html">About Us</a>
+        <a class="mr-5 hover:text-gray-900" href="favourites.html">Favourites</a>
+      </nav>
+    </div>
+    <hr class="w-[1000px] mx-auto my-3 border-t-[2px] border-orange-500 pt-4">
+  </header>
+
+  <h2 class="text-xl font-bold mt-6 mb-2 text-center text-orange-500">My Favorites</h2>
+  <div id="favoritesContainer" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const favContainer = document.getElementById("favoritesContainer");
+      let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+      function renderFavorites() {
+        favContainer.innerHTML = "";
+
+        if (favorites.length === 0) {
+          favContainer.innerHTML = `<p class="text-red-600 font-semibold col-span-full text-center">No favorites yet!</p>`;
+          return;
+        }
+
+        favorites.forEach(recipe => {
+          const card = document.createElement("article");
+          card.className =
+            "bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition transform hover:-translate-y-1";
+          card.innerHTML = `
+            <img src="${recipe.strMealThumb}" alt="${recipe.strMeal}" class="w-full h-40 object-cover">
+            <div class="p-2 text-left">
+              <h3 class="text-lg font-bold text-gray-800 mb-2">${recipe.strMeal}</h3>
+              <p class="text-sm text-gray-500 mb-1"><strong>Area:</strong> ${recipe.strArea}</p>
+              <p class="text-sm text-gray-500 mb-3"><strong>Category:</strong> ${recipe.strCategory}</p>
+              <button class="remove-fav-btn px-3 py-1 bg-red-500 text-white text-sm rounded-lg hover:bg-pink-600 transition" data-id="${recipe.idMeal}">
+                Remove
+              </button>
+            </div>
+          `;
+          favContainer.appendChild(card);
+        });
+      }
+
+      // Handle removing favorites
+      document.addEventListener("click", e => {
+        if (e.target.classList.contains("remove-fav-btn")) {
+          const id = e.target.getAttribute("data-id");
+          favorites = favorites.filter(r => r.idMeal !== id);
+          localStorage.setItem("favorites", JSON.stringify(favorites));
+          renderFavorites();
+        }
+      });
+
+      renderFavorites();
+    });
+  </script>
 </body>
 </html>
